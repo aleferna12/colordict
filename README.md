@@ -24,15 +24,15 @@ Quick example on how to use the library (more examples in the "Examples of usage
 
 Run:
 
-    pip install colordict
+    python -m pip install colordict
 
 # Using ColorDict:
 
 The ColorDict class is the main feature of this package. It is used to organize your colors in an easy and intuitive way.
- All colors are saved as a json dictionary in the "palettes" directory of the package. When you create an instance of 
- ColorDict, these colors are loaded as keys, and can be accessed just as any python dictionary. Because of this, **there
-  can be only one color value per key name**, and disrespecting this rule will lead to inconsistancies. Note, however, 
-  that **multiple keys can map to the same value**.
+All colors are saved as a json dictionary in the "palettes" directory of the package (or wherever you set to with the 
+"palettes_path" parameter). When you create an instance of ColorDict, these colors are loaded as keys, and can be accessed
+just as any python dictionary. Because of this, **there can be only one color value per key name**, and disrespecting 
+this rule will lead to inconsistancies. Note, however, that **multiple keys can map to the same value**.
 
 - Is fine:
 
@@ -50,11 +50,13 @@ The ColorDict class is the main feature of this package. It is used to organize 
 
 - Initializing a ColorDict instance:
     
-        colordict_instance = ColorDict(norm=255, mode='rgb', is_grayscale=False, palettes='all')
+        colordict_instance = ColorDict(norm=255, mode='rgb', palettes_path="", is_grayscale=False, palettes='all')
         
-    - "norm" represents the standart norm of the dictionary. Any value retrieved from a key will be normalized to that. Any value set to a key should be in this norm
+    - "norm" represents the standart norm of the dictionary. Any value retrieved from a key will be normalized to that. 
+    Any value set to a key should be in this norm
     - "mode" is the format in which values will be retrieved (see section on retrieving values for more on that)
-    - If "is_grayscale=True", values retrieved from keys will all be shades of gray
+    - "palettes_path" set the path from which the instance will load the palettes (and where they are going to be saved as well)
+    - If "is_grayscale=True", values retrieved from keys will all be converted to shades of gray
     - You can load only some palettes by passing a list of palettes to the "palettes" argument. "all", the default, will load all palettes instead
     
 - For example, running:
@@ -123,6 +125,8 @@ values returned by these methods will be in rgba format
 
         colordict_instance['color_name'] = new_rgb_a
 
+    > Note, however, that this change will not be permanent
+    > If you want to permanently save the change to a color value, use color_instance.add('color_name', rgb_a, 'palette', check=False)
     > In this case you probably will want to "color_instance.save()" afterwards
 
 - Example:
