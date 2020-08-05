@@ -1,4 +1,4 @@
-colordict
+# colordict
 
 A package to allow for easy maintenance of a color dictionary with palettes, so you can use the colors that you like in 
 your different projects.
@@ -20,13 +20,13 @@ Quick example on how to use the library (more examples in the "Examples of usage
     
     rainbow_gradient = LinearGrad([colors[color] for color in rainbow_colors])
 
-# To install:
+## To install:
 
 Run:
 
     python -m pip install colordict
 
-# Using ColorDict:
+## Using ColorDict:
 
 The ColorDict class is the main feature of this package. It is used to organize your colors in an easy and intuitive way.
 All colors are saved as a json dictionary in the "palettes" directory of the package (or wherever you set to with the 
@@ -48,7 +48,7 @@ this rule will lead to inconsistancies. Note, however, that **multiple keys can 
 
 > See the topic on adding and removing colors for more insight in how to properly add colors to the dictionary
 
-## Initializing a ColorDict instance:
+### Initializing a ColorDict instance:
     
         colordict_instance = ColorDict(norm=255, mode='rgb', palettes_path="", is_grayscale=False, palettes='all')
         
