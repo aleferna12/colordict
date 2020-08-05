@@ -1,4 +1,4 @@
-# colordict
+colordict
 
 A package to allow for easy maintenance of a color dictionary with palettes, so you can use the colors that you like in 
 your different projects.
