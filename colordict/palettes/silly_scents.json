@@ -1,0 +1,98 @@
+{
+    "alienarmpit": [
+        132,
+        222,
+        2,
+        255
+    ],
+    "bigfootfeet": [
+        232,
+        142,
+        90,
+        255
+    ],
+    "boogerbuster": [
+        221,
+        226,
+        106,
+        255
+    ],
+    "dingydungeon": [
+        197,
+        49,
+        81,
+        255
+    ],
+    "gargoylegas": [
+        255,
+        223,
+        70,
+        255
+    ],
+    "giant'sclub": [
+        176,
+        92,
+        82,
+        255
+    ],
+    "magicpotion": [
+        255,
+        68,
+        102,
+        255
+    ],
+    "mummy'stomb": [
+        130,
+        142,
+        132,
+        255
+    ],
+    "ogreodor": [
+        253,
+        82,
+        64,
+        255
+    ],
+    "pixiepowder": [
+        57,
+        18,
+        133,
+        255
+    ],
+    "princessperfume": [
+        255,
+        133,
+        207,
+        255
+    ],
+    "sasquatchsocks": [
+        255,
+        70,
+        129,
+        255
+    ],
+    "seaserpent": [
+        75,
+        199,
+        207,
+        255
+    ],
+    "smashedpumpkin": [
+        255,
+        109,
+        58,
+        255
+    ],
+    "sunburntcyclops": [
+        255,
+        64,
+        76,
+        255
+    ],
+    "winterwizard": [
+        160,
+        230,
+        255,
+        255
+    ]
+}

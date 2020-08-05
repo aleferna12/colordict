@@ -1,0 +1,86 @@
+{
+    "radicalred": [
+        255,
+        53,
+        94,
+        255
+    ],
+    "wildwatermelon": [
+        253,
+        91,
+        120,
+        255
+    ],
+    "outrageousorange": [
+        255,
+        96,
+        55,
+        255
+    ],
+    "atomictangerine": [
+        255,
+        153,
+        102,
+        255
+    ],
+    "neoncarrot": [
+        255,
+        153,
+        51,
+        255
+    ],
+    "sunglow": [
+        255,
+        204,
+        51,
+        255
+    ],
+    "laserlemon": [
+        255,
+        255,
+        102,
+        255
+    ],
+    "electriclime": [
+        204,
+        255,
+        0,
+        255
+    ],
+    "screamin'green": [
+        102,
+        255,
+        102,
+        255
+    ],
+    "magicmint": [
+        170,
+        240,
+        209,
+        255
+    ],
+    "blizzardblue": [
+        80,
+        191,
+        230,
+        255
+    ],
+    "shockingpink": [
+        255,
+        110,
+        255,
+        255
+    ],
+    "razzledazzlerose": [
+        238,
+        52,
+        210,
+        255
+    ],
+    "hotmagenta": [
+        255,
+        0,
+        204,
+        255
+    ]
+}
