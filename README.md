@@ -48,7 +48,7 @@ this rule will lead to inconsistancies. Note, however, that **multiple keys can 
 
 > See the topic on adding and removing colors for more insight in how to properly add colors to the dictionary
 
-- Initializing a ColorDict instance:
+## Initializing a ColorDict instance:
     
         colordict_instance = ColorDict(norm=255, mode='rgb', palettes_path="", is_grayscale=False, palettes='all')
         
