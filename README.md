@@ -18,7 +18,7 @@ Quick example on how to use the library (more examples in the "Examples of usage
     red_hex_string = colors['red', 'hex']
     rainbow_colors = colors.palettes['rainbow']
     
-    rainbow_gradient = LinearGrad(rainbow_colors)
+    rainbow_gradient = LinearGrad([colors[color] for color in rainbow_colors])
 
 # To install:
 
@@ -30,7 +30,7 @@ Run:
 
 The ColorDict class is the main feature of this package. It is used to organize your colors in an easy and intuitive way.
 All colors are saved as a json dictionary in the "palettes" directory of the package (or wherever you set to with the 
-"palettes_path" parameter). When you create an instance of ColorDict, these colors are loaded as keys, and can be accessed
+`palettes_path` parameter). When you create an instance of `ColorDict`, these colors are loaded as keys, and can be accessed
 just as any python dictionary. Because of this, **there can be only one color value per key name**, and disrespecting 
 this rule will lead to inconsistancies. Note, however, that **multiple keys can map to the same value**.
 
@@ -52,12 +52,12 @@ this rule will lead to inconsistancies. Note, however, that **multiple keys can 
     
         colordict_instance = ColorDict(norm=255, mode='rgb', palettes_path="", is_grayscale=False, palettes='all')
         
-    - "norm" represents the standart norm of the dictionary. Any value retrieved from a key will be normalized to that. 
+    - `norm` represents the standart norm of the dictionary. Any value retrieved from a key will be normalized to that. 
     Any value set to a key should be in this norm
-    - "mode" is the format in which values will be retrieved (see section on retrieving values for more on that)
-    - "palettes_path" set the path from which the instance will load the palettes (and where they are going to be saved as well)
-    - If "is_grayscale=True", values retrieved from keys will all be converted to shades of gray
-    - You can load only some palettes by passing a list of palettes to the "palettes" argument. "all", the default, will load all palettes instead
+    - `mode` is the format in which values will be retrieved (see section on retrieving values for more on that)
+    - `palettes_path` set the path from which the instance will load the palettes (and where they are going to be saved as well)
+    - If `is_grayscale=True`, values retrieved from keys will all be converted to shades of gray
+    - You can load only some palettes by passing a list of palettes to the `palettes` argument. `palettes=all`, the default, will load all palettes instead
     
 - For example, running:
 
@@ -77,17 +77,17 @@ this rule will lead to inconsistancies. Note, however, that **multiple keys can 
         #ff0000
         (76.5, 76.5, 76.5)
         
-    And a KeyError would be raised for "fluo_dict", as "red" is not a color of the "fluorescent" palette
+    And a `KeyError` would be raised for `fluo_dict`, as `red` is not a color of the "fluorescent" palette
     
-- "colordict_instance.palettes" is a dictionary containing every loaded palette and the name of the colors contained in each of them
-- "colordict_instance.norm" represents the dictionary's current norm. It is read-only
-- "colordict_instance.mode" represents the dictionary's current mode ( 'rgb', 'rgba', 'hex', 'hls', 'hsv' or 'yiq')
-- "colordict_instance.is_grayscale" represents if the dictionary is grayscale or not
-- "colordict_instance.palettes_path" represents the path to the directory where palettes are stored. It is read-only
+- `colordict_instance.palettes` is a dictionary containing every loaded palette and the name of the colors contained in each of them
+- `colordict_instance.norm` represents the dictionary's current norm. It is read-only
+- `colordict_instance.mode` represents the dictionary's current mode ( 'rgb', 'rgba', 'hex', 'hls', 'hsv' or 'yiq')
+- `colordict_instance.is_grayscale` represents if the dictionary is grayscale or not
+- `colordict_instance.palettes_path` represents the path to the directory where palettes are stored
 
 ### Retrieving color values from a ColorDictionary instance:
 
-- Color values can be retrieved from a ColorDict by doing:
+- Color values can be retrieved from a `ColorDict` by doing:
 
          colordict_instance['color_name']
          
@@ -99,11 +99,11 @@ this rule will lead to inconsistancies. Note, however, that **multiple keys can 
     
             colordict_instance['red', 'hex']
             
-        Would return: "#ff0000"
+        Would return: `"#ff0000"`
         
 - As of right now, 'rgb', 'rgba', 'hex', 'hls', 'hsv' and 'yiq' modes are available
-- If you don't specify a mode, the attribute "colordict_instance.mode" will be used instead
-- You can also use default methods from dictionaries, such as "keys()", "values()" and "items()", but note that any
+- If you don't specify a mode, the attribute `colordict_instance.mode` will be used instead
+- You can also use default methods from dictionaries, such as `keys()`, `values()` and `items()`, but note that any
 values returned by these methods will be in rgba format
 
 ### Adding, changing and removing colors:
@@ -113,21 +113,24 @@ values returned by these methods will be in rgba format
         color_instance.add('color_name', rgb_a, palette='independent', check=True)
         color_instance.remove('color_name', palette)
         
-    > Note that the method "remove()" will only remove the color from the particular palette. You can use the method "remove_all('color_name')" if you wish to remove a color from all palettes and delete the dictionary key
+    > Note that the method `remove()` will only remove the color from a particular palette. You can use the method `remove_all('color_name')` if you wish to remove a color from all palettes and delete the dictionary key
         
-- If you only wish to locally add colors to a ColorDict but don't want the "save()" method to save them, you can simply do:
+- If you only wish to locally add colors to a ColorDict but don't want the `save()` method to save them, you can simply do:
 
         colordict_instance['color_name'] = rgb_a
         
-    > **Note that whenever adding values, the format must always be (r, g, b) or (r, g, b, a)**
+    > **Note that whenever adding values, the format must be (r, g, b) or (r, g, b, a)**
     
 - If you want to change the color value associated with a particular color name, you can do:
 
         colordict_instance['color_name'] = new_rgb_a
 
     > Note, however, that this change will not be permanent
-    > If you want to permanently save the change to a color value, use color_instance.add('color_name', rgb_a, 'palette', check=False)
-    > In this case you probably will want to "color_instance.save()" afterwards
+
+- If you want to permanently save the change to a color value, use:
+    
+        color_instance.add('color_name', rgb_a, 'palette', check=False)  
+    >In this case you probably will want to `color_instance.save()` afterwards
 
 - Example:
 
@@ -146,11 +149,11 @@ values returned by these methods will be in rgba format
         # Removing color 'orange' from all palettes:
         colordict_instance.remove_all('orange')
         
-- If you don't provide a palette name when using "add()", colors will be stored in a palette called "independent"
+- If you don't provide a palette name when using `add()`, colors will be stored in a palette called "independent"
 - Palettes are automatically created when adding colors to them if necessary
 - By default, trying to add colors that already exists will not work and a message will be printed telling you so
     > This was made to prevent you from unwillingly overwriting colors that already exist
-    - If you are sure you are not creating different colors with the same name (e.g. you are just creating a palette of existing colors), then set "check=False" when adding a color:
+    - If you are sure you are not creating different colors with the same name (e.g. you are just creating a palette of existing colors), then set `check=False` when adding a color:
     
             colordict_instance.add('color_name', rgb_a, palette='my_palette', check=False)
             
@@ -160,7 +163,7 @@ values returned by these methods will be in rgba format
 
         colordict_instance.save()
         
-- To create a backup of the current state of the ColorDict instance (in case you are afraid of messing things up), you can do:
+- To create a backup of the current state of the `ColorDict` instance (in case you are afraid of messing things up), you can do:
 
         colordict_instance.backup()
         
@@ -168,7 +171,7 @@ values returned by these methods will be in rgba format
 
         colordict_instance.restore()
         
-> Note that neither backup or restore functions automatically save(). If thats the intention, you must call it separately
+> Note that neither backup or restore functions automatically `save()`. If thats the intention, you must call it separately
 
 ## General functions:
 
@@ -199,7 +202,7 @@ These functions return the color inputed as the output format.
         yiq = rgb_to_yiq(rgb2)
         print(yiq)
         
-    Would print: (76.5, 152.745, 54.315)
+    Would print: `(76.5, 152.745, 54.315)`
         
 ### Other:
 
@@ -217,7 +220,7 @@ As of right now, the only available gradient is LinearGrad, which uses linear in
 
 ### LinearGrad
 
-- To initialize a LinearGrad instance, you'll only need a set of rgb or rgb_a values:
+- To initialize a `LinearGrad` instance, you'll only need a set of rgb or rgb_a values:
 
         grad = LinearGrad(list_of_rgbs)
         
@@ -229,9 +232,9 @@ As of right now, the only available gradient is LinearGrad, which uses linear in
 
         color_list = grad.n_colors(n, stripped=True)
         
-    - The returned list will never include the first and last color values of the list you used to create the LinearGrad instance, unless you set "stripped=False", in which case they will always be present
+    - The returned list will never include the first and last color values of the list you used to create the `LinearGrad` instance, unless you set `stripped=False`, in which case they will always be present
         
-- "grad.colors" represents the color values loaded in the gradient originally
+- `grad.colors` represents the color values loaded in the gradient originally
         
 - Example:
         
