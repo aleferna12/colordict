@@ -6,7 +6,7 @@ README = (HERE/"README.md").read_text()
 
 setup(
     name='colordict',
-    version='1.2.3',
+    version='1.2.4',
     packages=['colordict'],
     url='https://github.com/aleferna12/colordict',
     license='MIT',
