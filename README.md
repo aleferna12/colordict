@@ -3,6 +3,10 @@
 A package to allow for easy maintenance of a color dictionary with palettes, so you can use the colors that you like in 
 your different projects.
 
+> Example of a built-in palette ![Imgur](https://i.imgur.com/h5NXB0T.jpg)
+
+A list and a image of all built-in palettes and colors are available at the end of this document, in the "Palettes" section.
+
 The aim of this project was to create a simple library to manage color names and color values. There are some colors which 
 are so commonly used that the need to manually copy rgb or hex values becomes a burden. That's where ColorDict comes in,
  as it allows for much easier organizing of your prefered colors in a simple dictionary!
@@ -249,140 +253,67 @@ As of right now, the only available gradient is LinearGrad, which uses linear in
 
 # Examples of usage
 
-- Using tkinter to render a few rainbow-colored lines and a "aquamarine" rectangle on the screen:
+Using tkinter to render a rainbow gradient, a few rainbow-colored lines and a "aquamarine" rectangle on the screen:
 
-        import tkinter as tk
-        import colordict as cd
+    import tkinter as tk
+    import colordict as cd
+    
+    colors = cd.ColorDict(mode='hex')
+    master = tk.Tk()
+    
+    w = tk.Canvas(master, width=500, height=500)
+    w.pack()
+    
+    # Referencing the "aquamarine" color from "colors"
+    w.create_rectangle([10, 400, 50, 500], fill=colors['aquamarine'])
+    # Doing the same recursevely for all color names in "colors.palettes['rainbow']"
+    for i, color in enumerate(colors.palettes['rainbow']):
+        w.create_line([0, 0, (i + 1) * 200, 500], fill=colors[color])
+    
+    gradient = cd.LinearGrad([colors[color, 'rgb'] for color in colors.palettes['rainbow']])
+    print(colors['aquamarine'])
+    for i, color in enumerate(gradient.n_colors(100)):
+        w.create_rectangle([i, 0, i +1, 10], fill=cd.rgb_to_hex(color), width=0)
+    
+    tk.mainloop()
+    
+#Palettes and colors
 
-        colors = cd.ColorDict(mode='hex')
-        master = tk.Tk()
+A list of the names and image of the built-in palettes. Many of these palettes were released as Crayon color palettes and then adapted, others are personal selections. All of Pantone's color of the year are available as well.
 
-        w = tk.Canvas(master, width=500, height=500)
-        w.pack()
+- CSS
+    - Contains all colors available in CSS
+    - Image not shown because it would be too big
 
-        # Referencing the "aquamarine" color from "colors"
-        w.create_rectangle([10, 400, 50, 500], fill=colors['aquamarine'])
-        # Doing the same recursevely for all color names in "colors.palettes['rainbow']"
-        for i, color in enumerate(colors.palettes['rainbow']):
-            w.create_line([0, 0, (i + 1) * 200, 500], fill=colors[color])
+- mystic_forest
+    - ![Imgur](https://i.imgur.com/h5NXB0T.jpg)
 
-        tk.mainloop()
+- world_flags
+    - ![Imgur](https://i.imgur.com/zWOlPdr.jpg)
+    
+- rainbow
+    - ![Imgur](https://i.imgur.com/1XFZTmV.jpg)
+    
+- pantone_years
+    - ![Imgur](https://i.imgur.com/RgFd0V0.jpg)
+    
+- heads_n_tails
+    - ![Imgur](https://i.imgur.com/9FGljde.jpg)
 
-- Using tkinter to visualize a rainbow gradient and the colors composing it:
+- magic_scent
+    - ![Imgur](https://i.imgur.com/65Tucjo.jpg)
 
-        import tkinter as tk
-        import colordict as cd
-        import my_tools as mt
-
-        colors = cd.ColorDict()
-
-
-        class Window(tk.Tk):
-            def __init__(self):
-                super().__init__()
-                self.geometry('1200x400')
-                self.resizable(False, False)
-
-                self.canvas = tk.Canvas(width=1200, height=400)
-                self.canvas.pack()
-                
-                # Creating a gradient that goes through all colors in the 'rainbow' palette
-                palette = colors.palettes['rainbow']
-                self.grad = cd.LinearGrad([colors[name] for name in palette])
-                n = 1200
-                # Creating a thin rectangle for every color value returned by the "n_colors()" method
-                for i, color in enumerate(self.grad.n_colors(n)):
-                    self.canvas.create_rectangle(
-                        [i*1200/n, 0, (i + 1)*1200/n, 200],
-                        fill=cd.rgb_hex(color),
-                        outline=''
-                    )
-                # Creating a rectangle for every color in the 'rainbow' palette
-                for i, color in enumerate(palette):
-                    self.canvas.create_rectangle(
-                        [i*1200/len(palette), 200, (i + 1)*1200/len(palette), 400],
-                        fill=colors[color, 'hex'],
-                        outline=''
-                    )
-
-
-        win = Window()
-        win.mainloop()
-        
-- Simple color-picker using tkinter and sorting values by their hue:
-
-        import tkinter as tk
-        import colordict as cd
-        from functools import partial
-        
-        # Creating the dictionary instance
-        colors = cd.ColorDict(mode='hex', norm=1)
-        
-        
-        def colorname(instance, name, val):
-            global switch
-        
-            if switch: widget = instance.text2
-            else: widget = instance.text1
-            widget.config(bg=val)
-            widget.delete('1.0', tk.END)
-            # Converting to various formats and displaying them
-            widget.insert('1.0', f'{name}\nRGBA: {cd.hex_to_rgb(val)}\nHEX: {val}\nPALETTES:'
-                                 f'{[pal_name for pal_name, pal_list in colors.palettes.items() if name in pal_list]}')
-            if sum(cd.hex_to_rgb(val))/3 < 80:
-                widget.config(foreground=colors['white'])
-            else:
-                widget.config(foreground=colors['black'])
-        
-            switch = not switch
-        
-        
-        class Window(tk.Tk):
-            def __init__(self, *args, **kwargs):
-                super().__init__(*args, **kwargs)
-                self.title('Color Picker')
-                self.geometry('1152x768')
-                self.resizable(0, 0)
-                self.update_idletasks()
-        
-                self.colors_btns = {}
-                self.size = self.winfo_height()/(int(len(colors)**0.5) + 1)
-                row = 0
-                col = 0
-                # Creating a list of ordered hue values and color names
-                hues = []
-                for name in colors:
-                    hls = colors[name, 'hls']
-                    hues.append((hls[0], name))
-                hues.sort()
-                for _, color in hues:
-                    f = tk.Frame(self, height=self.size, width=self.size)
-                    f.pack_propagate(0)
-                    f.grid(row=row, column=col)
-                    self.colors_btns[color] = tk.Button(
-                        f, bg=colors[color], command=partial(colorname, self, color, colors[color])
-                    )
-                    self.colors_btns[color].pack(fill=tk.BOTH, expand=1)
-                    if (col + 1) * self.size < self.winfo_height(): col += 1
-                    else:
-                        col = 0
-                        row += 1
-        
-                comp_size = self.winfo_width() - self.winfo_height()
-                self.frame1 = tk.Frame(self, height=comp_size, width=comp_size)
-                self.frame1.pack_propagate(0)
-                self.frame1.place(x=self.winfo_height(), y=0)
-                self.frame2 = tk.Frame(self, height=comp_size, width=comp_size)
-                self.frame2.pack_propagate(0)
-                self.frame2.place(x=self.winfo_height(), y=comp_size)
-                self.text1 = tk.Text(self.frame1, font=("Helvetica", 12), bd=0)
-                self.text1.pack(fill=tk.BOTH, expand=1)
-                self.text2 = tk.Text(self.frame2, font=("Helvetica", 12), bd=0)
-                self.text2.pack(fill=tk.BOTH, expand=1)
-        
-        
-        win = Window()
-        
-        switch = 0
-        
-        win.mainloop()
+- gem_tones
+    - ![Imgur](https://i.imgur.com/VYTFqvL.jpg)
+    
+- silly_scents
+    - ![Imgur](https://i.imgur.com/Lpl25Fg.jpg)
+    
+- fluorescent
+    - ![Imgur](https://i.imgur.com/M5A2OOQ.jpg)
+    
+- silver_swirls
+    - ![Imgur](https://i.imgur.com/V6wbRR0.jpg)
+    
+- metallic_fx
+    - ![Imgur](https://i.imgur.com/4Ua6JUf.jpg)

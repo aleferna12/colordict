@@ -6,6 +6,8 @@ def _lin_interp(c1, c2, t):
 
 class LinearGrad(object):
     def __init__(self, color_values):
+        if type(color_values) == list or type(color_values) == tuple:
+            raise TypeError(f"type {type(color_values)} does not conform to the expected list or tuple types")
         super().__init__()
         self.colors = color_values
 
