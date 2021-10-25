@@ -193,7 +193,7 @@ These functions return the color inputed as the output format.
 
         hex_to_rgb('hex')
         
-- You can also freely convert between 'rgb' and 'hls', 'hsv' or 'yiq' (norm of input must be 1):
+- You can also freely convert between 'rgb' and 'hls', 'hsv' or 'yiq':
 
         hls_to_rgb(hls)
         
