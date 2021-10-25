@@ -277,7 +277,7 @@ Using tkinter to render a rainbow gradient, a few rainbow-colored lines and a "a
     
     tk.mainloop()
     
-#Palettes and colors
+# Palettes and colors
 
 A list of the names and image of the built-in palettes. Many of these palettes were released as Crayon color palettes and then adapted, others are personal selections. All of Pantone's color of the year are available as well.
 
