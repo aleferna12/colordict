@@ -1,19 +1,24 @@
-..
-	colordict documentation master file, created by
-	sphinx-quickstart on Wed Dec 29 22:59:48 2021.
-	You can adapt this file completely to your liking, but it should at least
-	contain the root `toctree` directive.
-
 Welcome to colordict's documentation!
-=====================================
+======================
+
+API
+---
 
 .. toctree::
 
-	instalation
+	src_code/color
+	src_code/cdict
+	src_code/gradients
 
-Indices and tables
-==================
+Installation
+------------
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+`colordict` can be installed in your system with the following command:
+
+.. code-block:: shell
+
+	py -m pip install colordict
+
+Quick-Start
+-----------
+

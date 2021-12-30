@@ -29,14 +29,13 @@ class ColorDict:
 						setattr(self, name, self.color_sys._from_rgba(value, **kwargs))
 						self.colors.add(name)
 
-	def get_color(self, color_name):
+	def get_color(self, color_name) -> typing.Type[colordict.color.ColorBase]:
 		return getattr(self, color_name)
 
-	def named(self, rgb_a):
+	def named(self, value) -> list:
 		color_list = []
 		for name in self.colors:
-			value = self.get_color(name)
-			if value[:len(rgb_a)] == rgb_a: color_list.append(name)
+			if self.get_color(name) == value: color_list.append(name)
 		return color_list
 
 	def add(self, name, value, palette='independent', check=True):
@@ -83,7 +82,7 @@ class ColorDict:
 			pal_dict = {}
 			for name in self.palettes[palette]:
 				color = self.get_color(name)
-				pal_dict[name] = (color.r, color.g, color.b, color.a)
+				pal_dict[name] = color._rgba
 			with open(os.path.join(self.palettes_path, palette + '.json'), 'w') as file:
 				json.dump(pal_dict, file, indent=4)
 		self._changed.clear()
@@ -94,7 +93,7 @@ class ColorDict:
 			color_dict[palette] = {}
 			for name in color_list:
 				color = self.get_color(name)
-				color_dict[palette][name] = (color.r, color.g, color.b, color.a)
+				color_dict[palette][name] = color._rgba
 		with open(os.path.join(_package_path, 'backup.json'), 'w') as file:
 			json.dump(color_dict, file, indent=4)
 

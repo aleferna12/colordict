@@ -3,11 +3,11 @@ import abc
 
 
 class ColorBase(metaclass=abc.ABCMeta):
+	_rgba: tuple
+
 	@abc.abstractmethod
 	def __new__(cls, rgba):
-		obj = super().__new__(cls)
-		obj._rgba = tuple(rgba)
-		return obj
+		pass
 
 	@classmethod
 	@abc.abstractmethod
