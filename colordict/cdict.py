@@ -1,7 +1,8 @@
 import json
 import os
-import colordict.color
 import typing
+import colordict.color
+from collections.abc import Sequence
 
 _package_path = os.path.dirname(__file__)
 
@@ -10,9 +11,9 @@ class ColorDict:
 	def __init__(self,
 	             palettes='all',
 	             palettes_path='',
-	             color_sys: typing.Type[colordict.color.ColorBase] = colordict.color.sRGBColor,
+	             color_space: typing.Type[colordict.color.ColorBase] = colordict.color.sRGBColor,
 	             **kwargs):
-		self.color_sys = color_sys
+		self.color_space = color_space
 		self.palettes_path = palettes_path if palettes_path else os.path.join(_package_path, 'palettes')
 		self._changed = set()
 		self._kwargs = kwargs
@@ -26,21 +27,21 @@ class ColorDict:
 				if pal_dict:
 					self.palettes[pal_name] = list(pal_dict)
 					for name, value in pal_dict.items():
-						setattr(self, name, self.color_sys._from_rgba(value, **kwargs))
+						setattr(self, name, self.color_space._from_rgba(value, **kwargs))
 						self.colors.add(name)
 
-	def get_color(self, color_name) -> typing.Type[colordict.color.ColorBase]:
+	def get_color(self, color_name) -> colordict.color.ColorBase:
 		return getattr(self, color_name)
 
-	def named(self, value) -> list:
+	def named(self, color: Sequence) -> list:
 		color_list = []
 		for name in self.colors:
-			if self.get_color(name) == value: color_list.append(name)
+			if self.get_color(name) == color: color_list.append(name)
 		return color_list
 
-	def add(self, name, value, palette='independent', check=True):
+	def add(self, name: str, color: Sequence, palette='independent', check=True):
 		forbidden = (
-			"color_sys",
+			"color_space",
 			"palettes_path",
 			"_changed",
 			"_kwargs",
@@ -51,15 +52,14 @@ class ColorDict:
 			raise ValueError(f"'{name}' is a reserved attribute name of ColorDict")
 		elif check and hasattr(self, name):
 			raise ValueError(f'Key "{name}" was not added because it already exists with value {self.get_color(name)}')
-		else:
-			setattr(self, name, self.color_sys(*value, **self._kwargs))
-			self.colors.add(name)
-			if palette not in self.palettes: self.palettes[palette] = []
-			self.palettes[palette].append(name)
-			self._changed.add(palette)
+		setattr(self, name, self._interpret_color_input(color))
+		self.colors.add(name)
+		if palette not in self.palettes: self.palettes[palette] = []
+		self.palettes[palette].append(name)
+		self._changed.add(palette)
 
-	def update(self, name, value):
-		setattr(self, name, self.color_sys(*value, **self._kwargs))
+	def update(self, name, color):
+		setattr(self, name, self._interpret_color_input(color))
 		for palette in self.palettes:
 			if name in palette:
 				self._changed.add(palette)
@@ -108,3 +108,16 @@ class ColorDict:
 			if color_list:
 				for name, value in color_list.items():
 					self.add(name, value, palette, False)
+
+	def _interpret_color_input(self, color: Sequence):
+		"""Tries to interpret user input and build a color to be used in the context of this
+		ColorDict instance."""
+		if isinstance(color, colordict.color.ColorBase):
+			return self.color_space._from_rgba(color._rgba, **self._kwargs)
+		# Color spaces that accept a single mandatory parameter for construction
+		elif self.color_space in (colordict.color.HexColor,):
+			return self.color_space(color, **self._kwargs)
+		# Assume that the color space accepts multiple unnamed mandatory parameters for construction
+		return self.color_space(*color, **self._kwargs)
+		# If a color space that accepts only keyword arguments is latter created, its logic can also
+		# be incorporated here

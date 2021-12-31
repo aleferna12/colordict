@@ -1,5 +1,5 @@
-Gradients
-==========================
+Gradient Classes
+================
 
 .. automodule:: colordict.gradients
 	:members:

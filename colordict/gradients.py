@@ -1,3 +1,9 @@
+"""Module containing classes to create gradients between colors.
+
+For now only the linear gradient is available.
+"""
+
+
 class LinearGrad(object):
 	def __init__(self, color_values):
 		color_values = tuple(color_values)
