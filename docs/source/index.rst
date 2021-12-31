@@ -6,9 +6,9 @@ API
 
 .. toctree::
 
-	src_code/cdict
-	src_code/color
-	src_code/gradients
+	cdict
+	color
+	gradients
 
 Installation
 ------------
