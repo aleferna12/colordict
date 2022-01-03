@@ -17,7 +17,7 @@ Installation
 
 .. code-block:: shell
 
-	py -m pip install colordict
+	$ python -m pip install colordict
 
 Quick-Start
 -----------

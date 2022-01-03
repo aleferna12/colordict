@@ -5,16 +5,14 @@ Color Classes
 	:members:
 	:undoc-members:
 	:show-inheritance:
-	:special-members: __new__
+	:exclude-members: ColorBase, ColorTupleBase
 
 .. autoclass:: colordict.color.ColorBase
 	:members:
 	:undoc-members:
 	:show-inheritance:
-	:special-members: __new__
 
 .. autoclass:: colordict.color.ColorTupleBase
 	:members:
 	:undoc-members:
 	:show-inheritance:
-	:special-members: __new__

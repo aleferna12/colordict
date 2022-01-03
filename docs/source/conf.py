@@ -40,6 +40,8 @@ extensions = [
 	"sphinx_rtd_theme"
 ]
 autodoc_member_order = 'bysource'
+autodoc_typehints = "description"
+autodoc_typehints_description_target = "documented"
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -59,15 +61,4 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
-
-
-# Skips the Base classes so that they can be manually added to the end of the documentation later
-def skip_base_classes(app, what, name, obj, skip, options):
-	if name in ("ColorBase", "ColorTupleBase"):
-		return True
-	return skip
-
-
-def setup(app):
-	app.connect('autodoc-skip-member', skip_base_classes)
+#html_static_path = ['_static']

@@ -96,6 +96,7 @@ class ColorTupleBase(ColorBase, tuple, metaclass=abc.ABCMeta):
 
 		This class is abstract and should not be instanciated.
 	"""
+
 	@abc.abstractmethod
 	def __new__(cls, iterable, rgba, include_a=False, round_to=-1):
 		if not include_a:
@@ -122,30 +123,30 @@ class sRGBColor(ColorTupleBase):
 	"""Represents a color in the `RGB color space`_.
 
 	.. _RGB color space: https://en.wikipedia.org/wiki/SRGB
-	"""
-	def __new__(cls, r: float, g: float, b: float, a: float = None, norm=255, include_a=False, round_to=-1):
-		"""Constructor for the sRGBColor class.
 
-		Args:
-			r: Red component of the color.
-			g: Green component of the color.
-			b: Blue component of the color.
-			a: Opacity component of the color. Defaults to ``None``, which means it will be the same
-				as the ``norm`` parameter.
-			norm: What the ``r``, ``g``, ``b``, and ``a`` components are normalized to (aka their highest
-				possible value). Some common values for this parameter would be 255 or 1.
-			include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
-				Setting it to ``True`` may result in an object such as :code:`sRGBColor(255, 255, 0,
-				255)` instead of :code:`sRGBColor(255, 255, 0)`, for exemple.
-			round_to: Rounds the value of each color component to this many decimal places. Setting this
-				parameter to 0 ensures that the components will be of type ``int``. The default, -1,
-				means that the components won't be rounded at all.
-		"""
+	Args:
+		r: Red component of the color.
+		g: Green component of the color.
+		b: Blue component of the color.
+		a: Opacity component of the color. Defaults to ``None``, which means it will be the same
+			as the ``norm`` parameter.
+		norm: What the ``r``, ``g``, ``b``, and ``a`` components are normalized to (aka their highest
+			possible value). Some common values for this parameter would be 255 or 1.
+		include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
+			Setting it to ``True`` may result in an object such as :code:`sRGBColor(255, 255, 0,
+			255)` instead of :code:`sRGBColor(255, 255, 0)`, for exemple.
+		round_to: Rounds the value of each color component to this many decimal places. Setting this
+			parameter to 0 ensures that the components will be of type ``int``. The default, -1,
+			means that the components won't be rounded at all.
+	"""
+
+	def __new__(cls, r: float, g: float, b: float, a: float = None, norm=255, include_a=False, round_to=-1):
 		if a is None:
 			a = norm
 
 		if any(spec > norm for spec in (r, g, b, a)):
-			raise ValueError("'r', 'g', 'b' and 'a' parameters of sRGBColor can't be larger then the defined 'norm' parameter'")
+			raise ValueError(
+				"'r', 'g', 'b' and 'a' parameters of sRGBColor can't be larger then the defined 'norm' parameter'")
 
 		obj = super().__new__(cls,
 		                      (r, g, b, a),
@@ -154,6 +155,9 @@ class sRGBColor(ColorTupleBase):
 		                      round_to=round_to)
 		obj.norm = norm
 		return obj
+
+	def __init__(self, **kwargs):
+		pass
 
 	@classmethod
 	def _from_rgba(cls, rgba, norm=255, include_a=False, round_to=-1):
@@ -171,35 +175,35 @@ class HSLColor(ColorTupleBase):
 	"""Represents a color in the `HSL color space`_.
 
 	.. _HSL color space: https://en.wikipedia.org/wiki/HSL_and_HSV
+
+	Args:
+		h: HUE component of the color.
+		s: Saturation component of the color.
+		l: Lightness component of the color.
+		a: Opacity component of the color. Defaults to ``None``, which means it will be the same
+			as the ``sla_norm`` parameter.
+		h_norm: What the ``h`` component is normalized to (aka its highest possible
+			value). Some common values for this parameter would be 360 or 1.
+		sla_norm: What the ``s``, ``l`` and ``a`` components are normalized to (aka their highest
+			possible value). Some common values for this parameter would be 1 or 100.
+		include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
+			Setting it to ``True`` may result in an object such as :code:`HSLColor(360, 1, 0,
+			1)` instead of :code:`HSLColor(360, 1, 0)`, for exemple.
+		round_to: Rounds the value of each color component to this many decimal places. Setting this
+			parameter to 0 ensures that the components will be of type ``int``. The default, -1,
+			means that the components won't be rounded at all.
 	"""
+
 	def __new__(cls, h: float, s: float, l: float, a: float = None, h_norm=360, sla_norm=1, include_a=False,
 	            round_to=-1):
-		"""Constructor for the HSLColor class.
-
-		Args:
-			h: HUE component of the color.
-			s: Saturation component of the color.
-			l: Lightness component of the color.
-			a: Opacity component of the color. Defaults to ``None``, which means it will be the same
-				as the ``sla_norm`` parameter.
-			h_norm: What the ``h`` component is normalized to (aka its highest possible
-				value). Some common values for this parameter would be 360 or 1.
-			sla_norm: What the ``s``, ``l`` and ``a`` components are normalized to (aka their highest
-				possible value). Some common values for this parameter would be 1 or 100.
-			include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
-				Setting it to ``True`` may result in an object such as :code:`HSLColor(360, 1, 0,
-				1)` instead of :code:`HSLColor(360, 1, 0)`, for exemple.
-			round_to: Rounds the value of each color component to this many decimal places. Setting this
-				parameter to 0 ensures that the components will be of type ``int``. The default, -1,
-				means that the components won't be rounded at all.
-		"""
 		if a is None:
 			a = sla_norm
 
 		if h > h_norm:
 			raise ValueError("'h' parameter of HSLColor can't be larger then the defined 'h_norm' parameter'")
 		if any(spec > sla_norm for spec in (s, l, a)):
-			raise ValueError("'s', 'l' and 'a' parameters of HSLColor can't be larger then the defined 'sla_norm' parameter'")
+			raise ValueError(
+				"'s', 'l' and 'a' parameters of HSLColor can't be larger then the defined 'sla_norm' parameter'")
 
 		rgba = colorsys.hls_to_rgb(h / h_norm, l / sla_norm, s / sla_norm) + (a / sla_norm,)
 		obj = super().__new__(cls, (h, s, l, a), rgba, include_a=include_a, round_to=round_to)
@@ -207,6 +211,9 @@ class HSLColor(ColorTupleBase):
 		obj.sla_norm = sla_norm
 
 		return obj
+
+	def __init__(self, **kwargs):
+		pass
 
 	@classmethod
 	def _from_rgba(cls, rgba, h_norm=360, sla_norm=1, include_a=False, round_to=-1):
@@ -227,35 +234,35 @@ class HSVColor(ColorTupleBase):
 	"""Represents a color in the `HSV color space`_.
 
 	.. _HSV color space: https://en.wikipedia.org/wiki/HSL_and_HSV
+
+	Args:
+		h: HUE component of the color.
+		s: Saturation component of the color.
+		v: Value component of the color.
+		a: Opacity component of the color. Defaults to ``None``, which means it will be the same
+			as the ``sva_norm`` parameter.
+		h_norm: What the ``h`` component is normalized to (aka its highest possible
+			value). Some common values for this parameter would be 360 or 1.
+		sva_norm: What the ``s``, ``v`` and ``a`` components are normalized to (aka their highest
+			possible value). Some common values for this parameter would be 1 or 100.
+		include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
+			Setting it to ``True`` may result in an object such as :code:`HSVColor(360, 1, 0,
+			1)` instead of :code:`HSVColor(360, 1, 0)`, for exemple.
+		round_to: Rounds the value of each color component to this many decimal places. Setting this
+			parameter to 0 ensures that the components will be of type ``int``. The default, -1,
+			means that the components won't be rounded at all.
 	"""
+
 	def __new__(cls, h: float, s: float, v: float, a: float = None, h_norm=360, sva_norm=1, include_a=False,
 	            round_to=-1):
-		"""Constructor for the HSVColor class.
-
-		Args:
-			h: HUE component of the color.
-			s: Saturation component of the color.
-			v: Value component of the color.
-			a: Opacity component of the color. Defaults to ``None``, which means it will be the same
-				as the ``sva_norm`` parameter.
-			h_norm: What the ``h`` component is normalized to (aka its highest possible
-				value). Some common values for this parameter would be 360 or 1.
-			sva_norm: What the ``s``, ``v`` and ``a`` components are normalized to (aka their highest
-				possible value). Some common values for this parameter would be 1 or 100.
-			include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
-				Setting it to ``True`` may result in an object such as :code:`HSVColor(360, 1, 0,
-				1)` instead of :code:`HSVColor(360, 1, 0)`, for exemple.
-			round_to: Rounds the value of each color component to this many decimal places. Setting this
-				parameter to 0 ensures that the components will be of type ``int``. The default, -1,
-				means that the components won't be rounded at all.
-		"""
 		if a is None:
 			a = sva_norm
 
 		if h > h_norm:
 			raise ValueError("'h' parameter of HSLColor can't be larger then the defined 'h_norm' parameter'")
 		if any(spec > sva_norm for spec in (s, v, a)):
-			raise ValueError("'s', 'v' and 'a' parameters of HSLColor can't be larger then the defined 'sva_norm' parameter'")
+			raise ValueError(
+				"'s', 'v' and 'a' parameters of HSLColor can't be larger then the defined 'sva_norm' parameter'")
 
 		rgba = colorsys.hsv_to_rgb(h / h_norm, s / sva_norm, v / sva_norm) + (a / sva_norm,)
 		obj = super().__new__(cls, (h, s, v, a), rgba, include_a=include_a, round_to=round_to)
@@ -263,6 +270,9 @@ class HSVColor(ColorTupleBase):
 		obj.sva_norm = sva_norm
 
 		return obj
+
+	def __init__(self, **kwargs):
+		pass
 
 	@classmethod
 	def _from_rgba(cls, rgba, h_norm=360, sva_norm=1, include_a=False, round_to=-1):
@@ -283,28 +293,27 @@ class CMYKColor(ColorTupleBase):
 	"""Represents a color in the `CMYK color space`_.
 
 	.. _CMYK color space: https://en.wikipedia.org/wiki/CMYK_color_model
+
+	Args:
+		c: Cyan component of the color.
+		m: Magenta component of the color.
+		y: Yellow component of the color.
+		k: Key (black) component of the color.
+		a: Opacity component of the color. Defaults to ``None``, which means it will be the same
+			as the ``norm`` parameter.
+		norm: What the ``c``, ``m``, ``y``, ``k``, and ``a`` components are normalized to (aka
+			their highest possible value). Some common values for this parameter would be 1 or
+			100.
+		include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
+			Setting it to ``True`` may result in an object such as :code:`CMYKColor(1, 1, 0,
+			1)` instead of :code:`CMYKColor(1, 1, 0)`, for exemple.
+		round_to: Rounds the value of each color component to this many decimal places. Setting
+			this parameter to 0 ensures that the components will be of type ``int``. The default,
+			-1, means that the components won't be rounded at all.
 	"""
+
 	def __new__(cls, c: float, m: float, y: float, k: float, a: float = None, norm=1, include_a=False,
 	            round_to=-1):
-		"""Constructor for the CMYKColor class.
-
-		Args:
-			c: Cyan component of the color.
-			m: Magenta component of the color.
-			y: Yellow component of the color.
-			k: Key (black) component of the color.
-			a: Opacity component of the color. Defaults to ``None``, which means it will be the same
-				as the ``norm`` parameter.
-			norm: What the ``c``, ``m``, ``y``, ``k``, and ``a`` components are normalized to (aka
-				their highest possible value). Some common values for this parameter would be 1 or
-				100.
-			include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
-				Setting it to ``True`` may result in an object such as :code:`CMYKColor(1, 1, 0,
-				1)` instead of :code:`CMYKColor(1, 1, 0)`, for exemple.
-			round_to: Rounds the value of each color component to this many decimal places. Setting
-				this parameter to 0 ensures that the components will be of type ``int``. The default,
-				-1, means that the components won't be rounded at all.
-		"""
 		if a is None:
 			a = norm
 
@@ -320,6 +329,9 @@ class CMYKColor(ColorTupleBase):
 		obj.norm = norm
 
 		return obj
+
+	def __init__(self, **kwargs):
+		pass
 
 	@classmethod
 	def _from_rgba(cls, rgba, norm=1, include_a=False, round_to=-1):
@@ -350,27 +362,27 @@ class CMYColor(ColorTupleBase):
 	"""Represents a color in the `CMY color space`_.
 
 	.. _CMY color space: https://en.wikipedia.org/wiki/CMY_color_model
+
+
+	Args:
+		c: Cyan component of the color.
+		m: Magenta component of the color.
+		y: Yellow component of the color.
+		a: Opacity component of the color. Defaults to ``None``, which means it will be the same
+			as the ``norm`` parameter.
+		norm: What the ``c``, ``m``, ``y`` and ``a`` components are normalized to (aka
+			their highest possible value). Some common values for this parameter would be 1 or
+			100.
+		include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
+			Setting it to ``True`` may result in an object such as :code:`CMYColor(1, 1, 0,
+			1)` instead of :code:`CMYColor(1, 1, 0)`, for exemple.
+		round_to: Rounds the value of each color component to this many decimal places. Setting
+			this parameter to 0 ensures that the components will be of type ``int``. The default,
+			-1, means that the components won't be rounded at all.
 	"""
+
 	def __new__(cls, c: float, m: float, y: float, a: float = None, norm=1, include_a=False,
 	            round_to=-1):
-		"""Constructor for the CMYColor class.
-
-		Args:
-			c: Cyan component of the color.
-			m: Magenta component of the color.
-			y: Yellow component of the color.
-			a: Opacity component of the color. Defaults to ``None``, which means it will be the same
-				as the ``norm`` parameter.
-			norm: What the ``c``, ``m``, ``y`` and ``a`` components are normalized to (aka
-				their highest possible value). Some common values for this parameter would be 1 or
-				100.
-			include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
-				Setting it to ``True`` may result in an object such as :code:`CMYColor(1, 1, 0,
-				1)` instead of :code:`CMYColor(1, 1, 0)`, for exemple.
-			round_to: Rounds the value of each color component to this many decimal places. Setting
-				this parameter to 0 ensures that the components will be of type ``int``. The default,
-				-1, means that the components won't be rounded at all.
-		"""
 		if a is None:
 			a = norm
 
@@ -386,6 +398,9 @@ class CMYColor(ColorTupleBase):
 		obj.norm = norm
 
 		return obj
+
+	def __init__(self, **kwargs):
+		pass
 
 	@classmethod
 	def _from_rgba(cls, rgba, norm=1, include_a=False, round_to=-1):
@@ -405,17 +420,16 @@ class HexColor(ColorBase, str):
 	Is mostly used for representing `colors in web applications`_.
 
 	.. _colors in web applications: https://en.wikipedia.org/wiki/Web_colors
-	"""
-	def __new__(cls, hex_str: str, include_a=False):
-		"""Constructor for the HexColor class.
 
-		Args:
-			hex_str: Hexadecimal string from which the ``HexColor`` instance will be built.
-				May or may not include a "#" character in its beggining.
-			include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
-				Setting it to ``True`` may result in an object such as :code:`HexColor('#ffffff00')`
-				instead of :code:`HexColor('#ffff00')`, for exemple.
-		"""
+	Args:
+		hex_str: Hexadecimal string from which the ``HexColor`` instance will be built.
+			May or may not include a "#" character in its beggining.
+		include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
+			Setting it to ``True`` may result in an object such as :code:`HexColor('#ffffff00')`
+			instead of :code:`HexColor('#ffff00')`, for exemple.
+	"""
+
+	def __new__(cls, hex_str: str, include_a=False):
 		hex_str = hex_str.lstrip("#")
 		if len(hex_str) == 6:
 			a = 1
@@ -429,6 +443,9 @@ class HexColor(ColorBase, str):
 		obj = str.__new__(cls, hex_str)
 		obj._rgba = rgb + (a,)
 		return obj
+
+	def __init__(self, **kwargs):
+		pass
 
 	def __repr__(self):
 		return f"{self.__class__.__name__}({str.__repr__(self)})"

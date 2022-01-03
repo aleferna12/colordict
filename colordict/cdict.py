@@ -1,3 +1,5 @@
+"""Module containing the main class of the colordict package: ColorDict."""
+
 import json
 import os
 import typing
@@ -8,12 +10,42 @@ _package_path = os.path.dirname(__file__)
 
 
 class ColorDict:
+	"""Class that holds colors extracted from palettes.
+
+	Args:
+		palettes: List of palettes located in the ``palettes_path`` directory that should be
+			loaded by this ColorDict instance. By default, loads all palettes.
+		palettes_path: Path from which the palettes specified in the ``palettes`` parameter will
+			be loaded. Defaults to ".../colordict/palettes".
+		color_space: Which color class should be used to load the colors. Any of the defined
+			:doc:`color classes <color>` can be used.
+		**kwargs: Any other keyword argument specified in this constructor will be passed on to
+			the constructor of the color class identified in the color_space parameter.
+
+	Examples:
+		.. code-block:: python
+
+			c = ColorDict(color_space=sRGBColor, norm=1)
+
+		Will create a ``ColorDict`` where all color entries are ``sRGBColor`` objects that have
+		their norm attribute set to 1.
+
+	Attributes:
+		colors: A list of all colors currently loaded in the ``ColorDict``.
+		palettes: A dictionary containing all palettes currently loaded in the ``ColorDict``.
+			The palettes are keys in the dictionary which map to a list of color names.
+		color_space: Stores the value passed to the constructor in the ``color_space`` parameter.
+			**This property is read-only and can't be set outside the ColorDict constructor.**
+		palettes_path: Stores the value passed to the constructor in the ``palettes_path``
+			parameter.
+	"""
+
 	def __init__(self,
-	             palettes='all',
-	             palettes_path='',
+	             palettes: list = None,
+	             palettes_path: str = "",
 	             color_space: typing.Type[colordict.color.ColorBase] = colordict.color.sRGBColor,
 	             **kwargs):
-		self.color_space = color_space
+		self._color_space = color_space
 		self.palettes_path = palettes_path if palettes_path else os.path.join(_package_path, 'palettes')
 		self._changed = set()
 		self._kwargs = kwargs
@@ -21,7 +53,7 @@ class ColorDict:
 		self.palettes = {}
 		for palette in os.scandir(self.palettes_path):
 			pal_name = palette.name[:palette.name.index('.')]
-			if palettes == 'all' or pal_name in palettes:
+			if palettes is None or pal_name in palettes:
 				with open(palette.path, 'r') as file:
 					pal_dict = json.load(file)
 				if pal_dict:
@@ -29,6 +61,10 @@ class ColorDict:
 					for name, value in pal_dict.items():
 						setattr(self, name, self.color_space._from_rgba(value, **kwargs))
 						self.colors.add(name)
+
+	@property
+	def color_space(self):
+		return self._color_space
 
 	def get_color(self, color_name) -> colordict.color.ColorBase:
 		return getattr(self, color_name)
@@ -119,5 +155,5 @@ class ColorDict:
 			return self.color_space(color, **self._kwargs)
 		# Assume that the color space accepts multiple unnamed mandatory parameters for construction
 		return self.color_space(*color, **self._kwargs)
-		# If a color space that accepts only keyword arguments is latter created, its logic can also
-		# be incorporated here
+	# If a color space that accepts only keyword arguments is latter created, its logic can also
+	# be incorporated here
