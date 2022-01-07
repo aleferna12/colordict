@@ -156,7 +156,7 @@ class sRGBColor(ColorTupleBase):
 		obj.norm = norm
 		return obj
 
-	def __init__(self, **kwargs):
+	def __init__(self, *args, **kwargs):
 		pass
 
 	@classmethod
@@ -212,7 +212,7 @@ class HSLColor(ColorTupleBase):
 
 		return obj
 
-	def __init__(self, **kwargs):
+	def __init__(self, *args, **kwargs):
 		pass
 
 	@classmethod
@@ -271,7 +271,7 @@ class HSVColor(ColorTupleBase):
 
 		return obj
 
-	def __init__(self, **kwargs):
+	def __init__(self, *args, **kwargs):
 		pass
 
 	@classmethod
@@ -330,7 +330,7 @@ class CMYKColor(ColorTupleBase):
 
 		return obj
 
-	def __init__(self, **kwargs):
+	def __init__(self, *args, **kwargs):
 		pass
 
 	@classmethod
@@ -399,7 +399,7 @@ class CMYColor(ColorTupleBase):
 
 		return obj
 
-	def __init__(self, **kwargs):
+	def __init__(self, *args, **kwargs):
 		pass
 
 	@classmethod
@@ -424,12 +424,22 @@ class HexColor(ColorBase, str):
 	Args:
 		hex_str: Hexadecimal string from which the ``HexColor`` instance will be built.
 			May or may not include a "#" character in its beggining.
+		case: Whether you want the ``hex_str`` to be stored in upper or lower case. Options are
+			'lower' and 'upper'.
 		include_a: Whether to include the opacity parameter ``a`` in the contructed tuple.
 			Setting it to ``True`` may result in an object such as :code:`HexColor('#ffffff00')`
 			instead of :code:`HexColor('#ffff00')`, for exemple.
 	"""
 
-	def __new__(cls, hex_str: str, include_a=False):
+	def __new__(cls, hex_str: str, case="lower", include_a=False):
+		if case == "lower":
+			hex_str = hex_str.lower()
+		elif case == "upper":
+			hex_str = hex_str.upper()
+		else:
+			raise ValueError("'case' parameter for HexString constructor must be either 'lower' or "
+			                 "'upper'")
+
 		hex_str = hex_str.lstrip("#")
 		if len(hex_str) == 6:
 			a = 1
@@ -438,13 +448,14 @@ class HexColor(ColorBase, str):
 		else:
 			raise ValueError("'hex_str' parameter of 'HexColor' class should be either 6 or 8 characters long "
 			                 "(disregarding the '#' at the begging)")
-		rgb = tuple(int(hex_str[i:i + 2], 16) / 255 for i in (-6, -4, -2))
+		rgb = (int(hex_str[-6:-4], 16) / 255, int(hex_str[-4:-2], 16) / 255, int(hex_str[-2:], 16) / 255)
 
 		obj = str.__new__(cls, hex_str)
 		obj._rgba = rgb + (a,)
+		obj.include_a = include_a
 		return obj
 
-	def __init__(self, **kwargs):
+	def __init__(self, *args, **kwargs):
 		pass
 
 	def __repr__(self):
